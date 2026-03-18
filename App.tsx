@@ -1,20 +1,107 @@
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Text } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { colors } from './src/constants/theme';
+import { setApiKey } from './src/services/ai';
+import CaptureScreen from './src/screens/CaptureScreen';
+import LibraryScreen from './src/screens/LibraryScreen';
+import DetailScreen from './src/screens/DetailScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
+import type { CaptureItem } from './src/types';
 
-export default function App() {
+const Tab = createBottomTabNavigator();
+
+const DarkTheme = {
+  ...DefaultTheme,
+  dark: true,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: colors.primary,
+    background: colors.background,
+    card: colors.surface,
+    text: colors.onSurface,
+    border: colors.border,
+    notification: colors.error,
+  },
+};
+
+const API_KEY_STORAGE_KEY = '@cortex_api_key';
+
+function LibraryWithDetail() {
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+
+  if (selectedItemId) {
+    return (
+      <DetailScreen
+        itemId={selectedItemId}
+        onBack={() => setSelectedItemId(null)}
+      />
+    );
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <LibraryScreen
+      onItemPress={(item: CaptureItem) => setSelectedItemId(item.id)}
+    />
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function TabIcon({ label, focused }: { label: string; focused: boolean }) {
+  const icons: Record<string, string> = {
+    Capture: '📷',
+    Library: '📚',
+    Settings: '⚙️',
+  };
+  return (
+    <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.5 }}>
+      {icons[label] ?? '?'}
+    </Text>
+  );
+}
+
+export default function App() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const init = async () => {
+      const storedKey = await AsyncStorage.getItem(API_KEY_STORAGE_KEY);
+      if (storedKey) {
+        setApiKey(storedKey);
+      }
+      setReady(true);
+    };
+    init();
+  }, []);
+
+  if (!ready) return null;
+
+  return (
+    <SafeAreaProvider>
+      <NavigationContainer theme={DarkTheme}>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <TabIcon label={route.name} focused={focused} />
+            ),
+            tabBarActiveTintColor: colors.primary,
+            tabBarInactiveTintColor: colors.onSurfaceVariant,
+            tabBarStyle: {
+              backgroundColor: colors.surface,
+              borderTopColor: colors.border,
+            },
+          })}
+        >
+          <Tab.Screen name="Capture" component={CaptureScreen} />
+          <Tab.Screen name="Library" component={LibraryWithDetail} />
+          <Tab.Screen name="Settings" component={SettingsScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
+      <StatusBar style="light" />
+    </SafeAreaProvider>
+  );
+}
