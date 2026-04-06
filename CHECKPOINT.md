@@ -92,7 +92,7 @@ See Strategic Context above.
 
 ## CP-003 — iOS Share Sheet Extension
 
-**Status:** ⏳ TODO — P0 killer feature (still valid, now scoped to images)
+**Status:** ✅ CODE COMPLETE — needs real device testing
 **What:** Enable "Take screenshot → Share → Send to Cortex" for IMAGE content.
 Text URLs → Readwise instead. Images/photos → Cortex.
 **Approach:**
@@ -106,7 +106,7 @@ Text URLs → Readwise instead. Images/photos → Cortex.
 
 ## CP-004 — Bulk Photo Import
 
-**Status:** ⏳ TODO — P0 onboarding hook (unchanged, now core to lane)
+**Status:** ✅ CODE COMPLETE — needs real device testing
 **What:** Import multiple photos from iPhone camera roll at once.
 **Why:** This IS the product now. Camera roll → AI organizes → searchable library.
 **Approach:**
