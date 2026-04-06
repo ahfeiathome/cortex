@@ -5,12 +5,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ShareIntentProvider, useShareIntentContext } from 'expo-share-intent';
 import { colors } from './src/constants/theme';
 import { setApiKey } from './src/services/ai';
 import CaptureScreen from './src/screens/CaptureScreen';
 import LibraryScreen from './src/screens/LibraryScreen';
 import DetailScreen from './src/screens/DetailScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import ShareIntentScreen from './src/screens/ShareIntentScreen';
+import BulkImportScreen from './src/screens/BulkImportScreen';
 import type { CaptureItem } from './src/types';
 
 const Tab = createBottomTabNavigator();
@@ -53,6 +56,7 @@ function LibraryWithDetail() {
 function TabIcon({ label, focused }: { label: string; focused: boolean }) {
   const icons: Record<string, string> = {
     Capture: '📷',
+    Import: '📁',
     Library: '📚',
     Settings: '⚙️',
   };
@@ -60,6 +64,37 @@ function TabIcon({ label, focused }: { label: string; focused: boolean }) {
     <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.5 }}>
       {icons[label] ?? '?'}
     </Text>
+  );
+}
+
+function AppContent() {
+  const { hasShareIntent } = useShareIntentContext();
+
+  // When a share intent arrives, show the share intent screen instead of tabs
+  if (hasShareIntent) {
+    return <ShareIntentScreen />;
+  }
+
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarIcon: ({ focused }) => (
+          <TabIcon label={route.name} focused={focused} />
+        ),
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.onSurfaceVariant,
+        tabBarStyle: {
+          backgroundColor: colors.surface,
+          borderTopColor: colors.border,
+        },
+      })}
+    >
+      <Tab.Screen name="Capture" component={CaptureScreen} />
+      <Tab.Screen name="Import" component={BulkImportScreen} />
+      <Tab.Screen name="Library" component={LibraryWithDetail} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
+    </Tab.Navigator>
   );
 }
 
@@ -80,28 +115,15 @@ export default function App() {
   if (!ready) return null;
 
   return (
-    <SafeAreaProvider>
-      <NavigationContainer theme={DarkTheme}>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            headerShown: false,
-            tabBarIcon: ({ focused }) => (
-              <TabIcon label={route.name} focused={focused} />
-            ),
-            tabBarActiveTintColor: colors.primary,
-            tabBarInactiveTintColor: colors.onSurfaceVariant,
-            tabBarStyle: {
-              backgroundColor: colors.surface,
-              borderTopColor: colors.border,
-            },
-          })}
-        >
-          <Tab.Screen name="Capture" component={CaptureScreen} />
-          <Tab.Screen name="Library" component={LibraryWithDetail} />
-          <Tab.Screen name="Settings" component={SettingsScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
-      <StatusBar style="light" />
-    </SafeAreaProvider>
+    <ShareIntentProvider
+      options={{ debug: false, resetOnBackground: true }}
+    >
+      <SafeAreaProvider>
+        <NavigationContainer theme={DarkTheme}>
+          <AppContent />
+        </NavigationContainer>
+        <StatusBar style="light" />
+      </SafeAreaProvider>
+    </ShareIntentProvider>
   );
 }

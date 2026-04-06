@@ -1,0 +1,19 @@
+{
+  "name": "cortex-api",
+  "version": "1.0.0",
+  "description": "CORTEX API server — agent-facing captures endpoint for Knowledge Hub",
+  "main": "index.ts",
+  "scripts": {
+    "start": "npx tsx index.ts",
+    "dev": "npx tsx watch index.ts"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "~5.9.2"
+  },
+  "private": true
+}

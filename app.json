@@ -35,11 +35,31 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "scheme": "cortex",
     "plugins": [
       [
         "expo-image-picker",
         {
           "photosPermission": "Cortex needs photo library access to import images."
+        }
+      ],
+      [
+        "expo-share-intent",
+        {
+          "iosActivationRules": {
+            "NSExtensionActivationSupportsImageWithMaxCount": 5
+          },
+          "iosShareExtensionName": "Cortex Share",
+          "androidIntentFilters": ["image/*"],
+          "androidMultiIntentFilters": ["image/*"]
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Cortex needs access to your photo library to import and organize images.",
+          "savePhotosPermission": false,
+          "isAccessMediaLocationEnabled": true
         }
       ]
     ]
