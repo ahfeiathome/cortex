@@ -1,7 +1,7 @@
 ---
 title: CORTEX — Checkpoint
 type: checkpoint
-updated: 2026-04-05
+updated: 2026-04-08
 ---
 
 # CHECKPOINT.md
@@ -12,8 +12,9 @@ HIL_DEV: OFF
 
 ## Strategic Context — April 2026 Pivot
 
-CORTEX is **shelved** (no active sprint). Strategic pivot recorded below based on
-Consultant analysis (2026-04-05). When revived, this is the product and lane.
+CORTEX is in **S4 BUILD** (transferred from Forge 2026-04-05). Strategic pivot recorded
+below based on Consultant analysis (2026-04-05). Sage identified Microsoft Lens
+retirement (Mar 2026) as a capture opportunity — see `docs/specs/sage-recommendation-lens-pivot.md`.
 
 ### Pivot: Text/URL lane → Visual/OCR lane
 
@@ -58,7 +59,7 @@ Anything that can be photographed should be searchable and structured.
 | Bulk photo import | ❌ Not supported | ✅ CP-004 |
 | Agent write API | ❌ Read-only via MCP | ✅ CP-007 (Koda/Felix/Mika write) |
 | Pricing | ~$8/month SaaS | TBD — freemium |
-| Users | 74K+ | 0 (shelved) |
+| Users | 74K+ | 0 (S4 BUILD) |
 
 ### Revenue Model (revised)
 
@@ -120,7 +121,7 @@ Text URLs → Readwise instead. Images/photos → Cortex.
 
 ## CP-005 — Semantic Search
 
-**Status:** ⏳ TODO — P1 (unchanged)
+**Status:** ⏳ TODO — P1
 **What:** Natural language search across visual captures.
 **Approach:**
 1. On capture: generate embedding from extracted text + AI description of image
@@ -132,7 +133,7 @@ Text URLs → Readwise instead. Images/photos → Cortex.
 
 ## CP-006 — Backend API
 
-**Status:** ⏳ TODO — ~~BLOCKED on AWS~~ AWS blocker CLEARED 2026-04-05
+**Status:** ⏳ TODO — AWS blocker CLEARED 2026-04-05
 **What:** Cloud sync, agent write API, server-side AI processing.
 **Blocker cleared:** Company naming resolved (BML Research). AWS account creation
 is a production concern — not a pre-requisite for continued local development.
@@ -149,7 +150,7 @@ Build locally first, stand up backend when product validates.
 
 **Status:** ⏳ TODO — P1, depends on CP-006
 **What:** POST /captures endpoint so Koda, Felix, Mika write discoveries directly.
-**Why:** This is now a KEY differentiator vs Readwise MCP (which is read-only).
+**Why:** This is a KEY differentiator vs Readwise MCP (which is read-only).
 Agents can push content IN. Readwise MCP only reads out.
 **Approach:**
 - Agent auth token per agent (koda, felix, mika, sage, rex)
@@ -162,8 +163,8 @@ Agents can push content IN. Readwise MCP only reads out.
 
 | Priority | CP | Feature | Status |
 |----------|----|---------|--------|
-| P0 | CP-003 | iOS Share Sheet (images only) | TODO |
-| P0 | CP-004 | Bulk Photo Import | TODO |
+| P0 | CP-003 | iOS Share Sheet (images only) | CODE COMPLETE — real device test |
+| P0 | CP-004 | Bulk Photo Import | CODE COMPLETE — real device test |
 | P1 | CP-005 | Semantic Search | TODO |
 | P1 | CP-006 | Backend API (AWS) | TODO — blocker cleared |
 | P1 | CP-007 | Agent Write API | TODO (after CP-006) |
@@ -172,7 +173,10 @@ Agents can push content IN. Readwise MCP only reads out.
 
 ## Open Blockers
 
-1. **Expo SDK compatibility** — `expo-share-intent` needs evaluation for image support
-2. **CORTEX transferred to Axiom (2026-04-05)** — lc-axiom session owns this now.
-   lc-forge: update COMPANY.md to remove CORTEX. lc-axiom: add to COMPANY.md, resume S4 BUILD.
+1. **Real device testing** — CP-003 and CP-004 are code complete but cannot be tested
+   on simulator. Requires physical iPhone. TestFlight gate at S6 PILOT.
+2. **Expo SDK compatibility** — `expo-share-intent` evaluation for image support needed
+   on real device run.
 3. **Shared gate at S6:** Apple Developer account ($99 💳 Michael) — needed for TestFlight.
+4. **Vercel deployment:** cortex-bigclaw.vercel.app — deploy when web landing ready.
+5. **Microsoft Lens opportunity** — time-limited SEO/marketing window. See sage spec.
