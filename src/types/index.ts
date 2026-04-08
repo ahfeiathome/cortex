@@ -8,6 +8,10 @@ export type TagType =
   | 'code'
   | 'design'
   | 'article'
+  | 'document'
+  | 'receipt'
+  | 'whiteboard'
+  | 'business-card'
   | 'other';
 
 export type CategoryType =

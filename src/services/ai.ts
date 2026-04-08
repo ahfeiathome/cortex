@@ -25,6 +25,10 @@ const VALID_TAGS: TagType[] = [
   'code',
   'design',
   'article',
+  'document',
+  'receipt',
+  'whiteboard',
+  'business-card',
   'other',
 ];
 
@@ -108,13 +112,22 @@ export async function analyzeImage(
 {
   "title": "short descriptive title (5-8 words)",
   "tags": ["tag1", "tag2"],
-  "extracted_text": "any readable text in the image",
+  "extracted_text": "all readable text in the image, verbatim",
   "category": "idea" | "todo" | "reference" | "inspiration" | "other",
   "summary": "one sentence description"
 }
 
-Valid tags: idea, todo, reference, inspiration, quote, screenshot, code, design, article, other.
-Valid categories: idea, todo, reference, inspiration, other.`,
+Valid tags: idea, todo, reference, inspiration, quote, screenshot, code, design, article, document, receipt, whiteboard, business-card, other.
+Valid categories: idea, todo, reference, inspiration, other.
+
+Tag guidance:
+- Use "whiteboard" for photos of whiteboards or flip charts
+- Use "document" for printed documents, letters, forms
+- Use "receipt" for receipts, invoices, bills
+- Use "business-card" for business cards — also extract name, email, phone, company into extracted_text as structured lines like "Name: ..., Email: ..., Phone: ..., Company: ..."
+- Use "code" for code snippets or terminal screenshots
+- Use "screenshot" for UI/app screenshots
+Always extract ALL visible text verbatim into extracted_text.`,
             },
           ],
         },
